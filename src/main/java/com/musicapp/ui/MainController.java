@@ -626,16 +626,16 @@ public class MainController {
         // Fetch metadata BEFORE saving to database
         executor.submit(() -> {
             try {
-                String finalTitle = url;
-                String finalArtist = isYouTube ? "YouTube" : (isSoundCloud ? "SoundCloud" : "Online");
-                int finalDuration = 0;
+                String title = url;
+                String artist = isYouTube ? "YouTube" : (isSoundCloud ? "SoundCloud" : "Online");
+                int duration = 0;
 
                 if (isYouTube) {
                     YouTubeMetadata metadata = fetchYouTubeMetadata(url);
                     if (metadata != null) {
-                        finalTitle = metadata.title;
-                        finalArtist = metadata.artist;
-                        finalDuration = metadata.duration;
+                        title = metadata.title;
+                        artist = metadata.artist;
+                        duration = metadata.duration;
 
                         // Try to extract lyrics from description
                         String lyrics = extractLyricsFromDescription(metadata.description);
@@ -644,16 +644,19 @@ public class MainController {
                         }
                     } else {
                         // Fallback if metadata fetch fails
-                        finalTitle = "YouTube: " + url.replaceAll(".*[?&]v=([^&]+).*", "$1");
-                        try { finalTitle = URLDecoder.decode(finalTitle, StandardCharsets.UTF_8); } catch (Exception ignored) {}
+                        title = "YouTube: " + url.replaceAll(".*[?&]v=([^&]+).*", "$1");
+                        try { title = URLDecoder.decode(title, StandardCharsets.UTF_8); } catch (Exception ignored) {}
                     }
                 } else {
                     // For non-YouTube URLs, use filename as title
-                    finalTitle = url.substring(url.lastIndexOf('/') + 1);
-                    try { finalTitle = URLDecoder.decode(finalTitle, StandardCharsets.UTF_8); } catch (Exception ignored) {}
+                    title = url.substring(url.lastIndexOf('/') + 1);
+                    try { title = URLDecoder.decode(title, StandardCharsets.UTF_8); } catch (Exception ignored) {}
                 }
 
                 // Create song with fetched metadata
+                final String finalTitle = title;
+                final String finalArtist = artist;
+                final int finalDuration = duration;
                 Song streamSong = new Song(finalTitle, finalArtist, "", finalDuration, url);
 
                 // Add to database with correct metadata
