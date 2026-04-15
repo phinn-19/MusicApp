@@ -152,9 +152,13 @@ public class MainController {
                 super.updateItem(song, empty);
                 if (empty || song == null) {
                     setGraphic(null);
+                    imageView.setImage(null);
                 } else {
                     titleLabel.setText(song.getTitle());
                     artistLabel.setText(song.getArtist());
+
+                    // Reset image to default before fetching
+                    imageView.setImage(null);
 
                     // Fetch album art in background
                     executor.submit(() -> {
@@ -180,7 +184,7 @@ public class MainController {
                                     img.progressProperty().addListener((obs, o, n) -> {
                                         if (n.doubleValue() >= 1.0 && !img.isError()) {
                                             Platform.runLater(() -> {
-                                                if (!isEmpty()) imageView.setImage(img);
+                                                if (!isEmpty() && getItem() == song) imageView.setImage(img);
                                             });
                                         }
                                     });
@@ -188,10 +192,7 @@ public class MainController {
                             }
                             conn.disconnect();
                         } catch (Exception ignored) {
-                            // Set default image on error
-                            Platform.runLater(() -> {
-                                if (!isEmpty()) imageView.setImage(null);
-                            });
+                            // Keep default image on error
                         }
                     });
 
@@ -230,9 +231,13 @@ public class MainController {
                 super.updateItem(song, empty);
                 if (empty || song == null) {
                     setGraphic(null);
+                    imageView.setImage(null);
                 } else {
                     titleLabel.setText(song.getTitle());
                     artistLabel.setText(song.getArtist());
+
+                    // Reset image to default before fetching
+                    imageView.setImage(null);
 
                     // Fetch album art in background
                     executor.submit(() -> {
@@ -258,7 +263,7 @@ public class MainController {
                                     img.progressProperty().addListener((obs, o, n) -> {
                                         if (n.doubleValue() >= 1.0 && !img.isError()) {
                                             Platform.runLater(() -> {
-                                                if (!isEmpty()) imageView.setImage(img);
+                                                if (!isEmpty() && getItem() == song) imageView.setImage(img);
                                             });
                                         }
                                     });
@@ -266,9 +271,7 @@ public class MainController {
                             }
                             conn.disconnect();
                         } catch (Exception ignored) {
-                            Platform.runLater(() -> {
-                                if (!isEmpty()) imageView.setImage(null);
-                            });
+                            // Keep default image on error
                         }
                     });
 
@@ -307,9 +310,13 @@ public class MainController {
                 super.updateItem(song, empty);
                 if (empty || song == null) {
                     setGraphic(null);
+                    imageView.setImage(null);
                 } else {
                     titleLabel.setText(song.getTitle());
                     artistLabel.setText(song.getArtist());
+
+                    // Reset image to default before fetching
+                    imageView.setImage(null);
 
                     // Fetch album art in background
                     executor.submit(() -> {
@@ -335,7 +342,7 @@ public class MainController {
                                     img.progressProperty().addListener((obs, o, n) -> {
                                         if (n.doubleValue() >= 1.0 && !img.isError()) {
                                             Platform.runLater(() -> {
-                                                if (!isEmpty()) imageView.setImage(img);
+                                                if (!isEmpty() && getItem() == song) imageView.setImage(img);
                                             });
                                         }
                                     });
@@ -343,9 +350,7 @@ public class MainController {
                             }
                             conn.disconnect();
                         } catch (Exception ignored) {
-                            Platform.runLater(() -> {
-                                if (!isEmpty()) imageView.setImage(null);
-                            });
+                            // Keep default image on error
                         }
                     });
 

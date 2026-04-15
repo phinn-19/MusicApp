@@ -64,6 +64,7 @@
     -fx-font-size: 12px;
     -fx-padding: 8 0 8 0;
     -fx-cursor: hand;
+    -fx-text-alignment: center;
 }
 .btn-tab-inactive {
     -fx-background-color: #ECECEC;
@@ -73,6 +74,7 @@
     -fx-font-size: 12px;
     -fx-padding: 8 0 8 0;
     -fx-cursor: hand;
+    -fx-text-alignment: center;
 }
 .btn-tab-inactive:hover { -fx-background-color: #E0E0E0; -fx-text-fill: #1DB954; }
 
@@ -291,13 +293,13 @@
     -fx-pref-height: 0; -fx-opacity: 0;
 }
 
-/* Force ListView to show scrollbars */
-.song-list-view, .playlist-list-view {
+/* Hide ListView scrollbars to avoid double scrollbars */
+.song-list-view .scroll-bar, .playlist-list-view .scroll-bar, .search-result-list .scroll-bar {
+    -fx-visible: false;
+}
+.song-list-view, .playlist-list-view, .search-result-list {
     -fx-background-insets: 0;
     -fx-padding: 0;
-}
-.song-list-view .scroll-bar, .playlist-list-view .scroll-bar {
-    -fx-visible: true;
 }
 /* Thêm vào file CSS của bạn để giới hạn text */
 .np-title {

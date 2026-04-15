@@ -55,12 +55,14 @@
     -fx-background-radius: 7 0 0 7; -fx-border-radius: 7 0 0 7;
     -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px;
     -fx-padding: 8 0 8 0; -fx-cursor: hand;
+    -fx-text-alignment: center;
 }
 .btn-tab-inactive {
     -fx-background-color: #282828;
     -fx-background-radius: 0 7 7 0; -fx-border-radius: 0 7 7 0;
     -fx-text-fill: #727272; -fx-font-size: 12px;
     -fx-padding: 8 0 8 0; -fx-cursor: hand;
+    -fx-text-alignment: center;
 }
 .btn-tab-inactive:hover { -fx-background-color: #383838; -fx-text-fill: #1DB954; }
 
@@ -221,4 +223,13 @@
 .scroll-bar:vertical .track { -fx-background-color: #383838; }
 .scroll-bar:vertical .increment-button, .scroll-bar:vertical .decrement-button {
     -fx-pref-height: 0; -fx-opacity: 0;
+}
+
+/* Hide ListView scrollbars to avoid double scrollbars (dark mode) */
+.song-list-view .scroll-bar, .playlist-list-view .scroll-bar, .search-result-list .scroll-bar {
+    -fx-visible: false;
+}
+.song-list-view, .playlist-list-view, .search-result-list {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }
