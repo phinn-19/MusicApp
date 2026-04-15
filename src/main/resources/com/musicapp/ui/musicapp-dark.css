@@ -98,6 +98,23 @@
 .song-list-view:focused, .playlist-list-view:focused { -fx-border-color: transparent; }
 .song-list-view .list-cell:focused, .playlist-list-view .list-cell:focused { -fx-border-color: transparent; }
 
+/* Apple Music style - ImageView in list cells (dark mode) */
+.song-list-view .list-cell .image-view,
+.playlist-list-view .list-cell .image-view,
+.search-result-list .list-cell .image-view {
+    -fx-background-radius: 8;
+    -fx-background-color: #282828;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0, 0, 1);
+}
+
+/* Apple Music style - HBox container (dark mode) */
+.song-list-view .list-cell .h-box,
+.playlist-list-view .list-cell .h-box,
+.search-result-list .list-cell .h-box {
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 8;
+}
+
 .add-pl-bar {
     -fx-background-color: #0A0A0A;
     -fx-border-color: #282828 transparent transparent transparent;

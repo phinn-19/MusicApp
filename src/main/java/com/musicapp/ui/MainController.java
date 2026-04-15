@@ -124,13 +124,77 @@ public class MainController {
     public void initialize() {
         songListView.setItems(songList);
         songListView.setCellFactory(lv -> new javafx.scene.control.ListCell<Song>() {
+            private final ImageView imageView = new ImageView();
+            private final HBox hbox = new HBox(12);
+            private final VBox vbox = new VBox(4);
+            private final Label titleLabel = new Label();
+            private final Label artistLabel = new Label();
+
+            {
+                imageView.setFitWidth(60);
+                imageView.setFitHeight(60);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+                imageView.setStyle("-fx-background-radius: 8; -fx-background-color: #f0f0f0;");
+
+                titleLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
+                artistLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+
+                vbox.getChildren().addAll(titleLabel, artistLabel);
+                hbox.getChildren().addAll(imageView, vbox);
+                hbox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                hbox.setStyle("-fx-padding: 8 12 8 12;");
+            }
+
             @Override
             protected void updateItem(Song song, boolean empty) {
                 super.updateItem(song, empty);
                 if (empty || song == null) {
-                    setText(null);
+                    setGraphic(null);
                 } else {
-                    setText(song.getTitle() + " - " + song.getArtist());
+                    titleLabel.setText(song.getTitle());
+                    artistLabel.setText(song.getArtist());
+
+                    // Fetch album art in background
+                    executor.submit(() -> {
+                        try {
+                            String query = java.net.URLEncoder.encode(song.getTitle() + " " + song.getArtist(), StandardCharsets.UTF_8);
+                            String apiUrl = "https://itunes.apple.com/search?term=" + query + "&media=music&limit=1";
+                            java.net.URL url = new java.net.URL(apiUrl);
+                            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                            conn.setConnectTimeout(3000);
+                            conn.setReadTimeout(3000);
+                            conn.setRequestProperty("User-Agent", "MusicApp/1.0");
+
+                            if (conn.getResponseCode() == 200) {
+                                String body = new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+                                int idx = body.indexOf("\"artworkUrl100\":");
+                                if (idx >= 0) {
+                                    int start = body.indexOf("\"", idx + 16) + 1;
+                                    int end = body.indexOf("\"", start);
+                                    String artUrl = body.substring(start, end);
+                                    artUrl = artUrl.replace("100x100bb", "60x60bb");
+                                    final String finalUrl = artUrl;
+                                    Image img = new Image(finalUrl, true);
+                                    img.progressProperty().addListener((obs, o, n) -> {
+                                        if (n.doubleValue() >= 1.0 && !img.isError()) {
+                                            Platform.runLater(() -> {
+                                                if (!isEmpty()) imageView.setImage(img);
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                            conn.disconnect();
+                        } catch (Exception ignored) {
+                            // Set default image on error
+                            Platform.runLater(() -> {
+                                if (!isEmpty()) imageView.setImage(null);
+                            });
+                        }
+                    });
+
+                    setGraphic(hbox);
                 }
             }
         });
@@ -138,13 +202,76 @@ public class MainController {
         playlistListView.setItems(playlistList);
         playlistSongsView.setItems(playlistSongList);
         playlistSongsView.setCellFactory(lv -> new javafx.scene.control.ListCell<Song>() {
+            private final ImageView imageView = new ImageView();
+            private final HBox hbox = new HBox(12);
+            private final VBox vbox = new VBox(4);
+            private final Label titleLabel = new Label();
+            private final Label artistLabel = new Label();
+
+            {
+                imageView.setFitWidth(60);
+                imageView.setFitHeight(60);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+                imageView.setStyle("-fx-background-radius: 8; -fx-background-color: #f0f0f0;");
+
+                titleLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
+                artistLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+
+                vbox.getChildren().addAll(titleLabel, artistLabel);
+                hbox.getChildren().addAll(imageView, vbox);
+                hbox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                hbox.setStyle("-fx-padding: 8 12 8 12;");
+            }
+
             @Override
             protected void updateItem(Song song, boolean empty) {
                 super.updateItem(song, empty);
                 if (empty || song == null) {
-                    setText(null);
+                    setGraphic(null);
                 } else {
-                    setText(song.getTitle() + " - " + song.getArtist());
+                    titleLabel.setText(song.getTitle());
+                    artistLabel.setText(song.getArtist());
+
+                    // Fetch album art in background
+                    executor.submit(() -> {
+                        try {
+                            String query = java.net.URLEncoder.encode(song.getTitle() + " " + song.getArtist(), StandardCharsets.UTF_8);
+                            String apiUrl = "https://itunes.apple.com/search?term=" + query + "&media=music&limit=1";
+                            java.net.URL url = new java.net.URL(apiUrl);
+                            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                            conn.setConnectTimeout(3000);
+                            conn.setReadTimeout(3000);
+                            conn.setRequestProperty("User-Agent", "MusicApp/1.0");
+
+                            if (conn.getResponseCode() == 200) {
+                                String body = new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+                                int idx = body.indexOf("\"artworkUrl100\":");
+                                if (idx >= 0) {
+                                    int start = body.indexOf("\"", idx + 16) + 1;
+                                    int end = body.indexOf("\"", start);
+                                    String artUrl = body.substring(start, end);
+                                    artUrl = artUrl.replace("100x100bb", "60x60bb");
+                                    final String finalUrl = artUrl;
+                                    Image img = new Image(finalUrl, true);
+                                    img.progressProperty().addListener((obs, o, n) -> {
+                                        if (n.doubleValue() >= 1.0 && !img.isError()) {
+                                            Platform.runLater(() -> {
+                                                if (!isEmpty()) imageView.setImage(img);
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                            conn.disconnect();
+                        } catch (Exception ignored) {
+                            Platform.runLater(() -> {
+                                if (!isEmpty()) imageView.setImage(null);
+                            });
+                        }
+                    });
+
+                    setGraphic(hbox);
                 }
             }
         });
@@ -152,13 +279,76 @@ public class MainController {
         playlistComboBox.setItems(playlistList);
         searchResultView.setItems(searchResultList);
         searchResultView.setCellFactory(lv -> new javafx.scene.control.ListCell<Song>() {
+            private final ImageView imageView = new ImageView();
+            private final HBox hbox = new HBox(12);
+            private final VBox vbox = new VBox(4);
+            private final Label titleLabel = new Label();
+            private final Label artistLabel = new Label();
+
+            {
+                imageView.setFitWidth(60);
+                imageView.setFitHeight(60);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+                imageView.setStyle("-fx-background-radius: 8; -fx-background-color: #f0f0f0;");
+
+                titleLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
+                artistLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+
+                vbox.getChildren().addAll(titleLabel, artistLabel);
+                hbox.getChildren().addAll(imageView, vbox);
+                hbox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                hbox.setStyle("-fx-padding: 8 12 8 12;");
+            }
+
             @Override
             protected void updateItem(Song song, boolean empty) {
                 super.updateItem(song, empty);
                 if (empty || song == null) {
-                    setText(null);
+                    setGraphic(null);
                 } else {
-                    setText(song.getTitle() + " - " + song.getArtist());
+                    titleLabel.setText(song.getTitle());
+                    artistLabel.setText(song.getArtist());
+
+                    // Fetch album art in background
+                    executor.submit(() -> {
+                        try {
+                            String query = java.net.URLEncoder.encode(song.getTitle() + " " + song.getArtist(), StandardCharsets.UTF_8);
+                            String apiUrl = "https://itunes.apple.com/search?term=" + query + "&media=music&limit=1";
+                            java.net.URL url = new java.net.URL(apiUrl);
+                            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                            conn.setConnectTimeout(3000);
+                            conn.setReadTimeout(3000);
+                            conn.setRequestProperty("User-Agent", "MusicApp/1.0");
+
+                            if (conn.getResponseCode() == 200) {
+                                String body = new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+                                int idx = body.indexOf("\"artworkUrl100\":");
+                                if (idx >= 0) {
+                                    int start = body.indexOf("\"", idx + 16) + 1;
+                                    int end = body.indexOf("\"", start);
+                                    String artUrl = body.substring(start, end);
+                                    artUrl = artUrl.replace("100x100bb", "60x60bb");
+                                    final String finalUrl = artUrl;
+                                    Image img = new Image(finalUrl, true);
+                                    img.progressProperty().addListener((obs, o, n) -> {
+                                        if (n.doubleValue() >= 1.0 && !img.isError()) {
+                                            Platform.runLater(() -> {
+                                                if (!isEmpty()) imageView.setImage(img);
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                            conn.disconnect();
+                        } catch (Exception ignored) {
+                            Platform.runLater(() -> {
+                                if (!isEmpty()) imageView.setImage(null);
+                            });
+                        }
+                    });
+
+                    setGraphic(hbox);
                 }
             }
         });

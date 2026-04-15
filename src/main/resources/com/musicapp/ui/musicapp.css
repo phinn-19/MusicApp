@@ -117,9 +117,10 @@
 .song-list-view .list-cell, .playlist-list-view .list-cell {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-padding: 7 10 7 10;
+    -fx-padding: 4 8 4 8;
     -fx-background-radius: 8;
     -fx-text-fill: #333333;
+    -fx-cell-size: 80;
 }
 .song-list-view .list-cell:hover, .playlist-list-view .list-cell:hover {
     -fx-background-color: #EBEBEB;
@@ -131,6 +132,23 @@
 }
 .song-list-view:focused, .playlist-list-view:focused { -fx-border-color: transparent; }
 .song-list-view .list-cell:focused, .playlist-list-view .list-cell:focused { -fx-border-color: transparent; }
+
+/* Apple Music style - ImageView in list cells */
+.song-list-view .list-cell .image-view,
+.playlist-list-view .list-cell .image-view,
+.search-result-list .list-cell .image-view {
+    -fx-background-radius: 8;
+    -fx-background-color: #f0f0f0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+}
+
+/* Apple Music style - HBox container */
+.song-list-view .list-cell .h-box,
+.playlist-list-view .list-cell .h-box,
+.search-result-list .list-cell .h-box {
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 8;
+}
 
 .add-pl-bar {
     -fx-background-color: #EFEFEF;
