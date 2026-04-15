@@ -148,44 +148,18 @@
                       alignment="CENTER" spacing="20"
                       maxWidth="Infinity">
 
-                    <!-- VINYL DISC -->
-                    <StackPane fx:id="vinylPane"
-                               prefWidth="220" prefHeight="220"
-                               maxWidth="220" maxHeight="220">
-                        <Circle radius="110"
-                                style="-fx-fill: #0d0d18;
-                                       -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.5),28,0,0,8);"/>
-                        <Circle fx:id="vinylDisc" radius="106"
-                                style="-fx-fill: #181824;"/>
-                        <Circle radius="100" style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.06);-fx-stroke-width:1.5;"/>
-                        <Circle radius="93"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.05);-fx-stroke-width:1;"/>
-                        <Circle radius="86"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.05);-fx-stroke-width:1;"/>
-                        <Circle radius="78"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
-                        <Circle radius="70"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
-                        <Circle radius="62"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
-                        <Circle radius="54"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
-                        <Circle radius="46"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
-                        <Circle fx:id="albumArtCircle" radius="38"
-                                style="-fx-fill: radial-gradient(center 40% 40%, radius 80%, #1DB954, #158A3E);
-                                       -fx-effect: dropshadow(gaussian,rgba(29,185,84,0.6),12,0,0,0);"/>
-                        <Label fx:id="albumArtLabel" text="♪"
-                               style="-fx-text-fill: rgba(255,255,255,0.8);
-                                      -fx-font-size: 22px;"/>
-                        <Circle radius="5"
-                                style="-fx-fill: #f5f5fa; -fx-stroke: #e0dcf8; -fx-stroke-width: 1;"/>
-                        <Group>
-                            <Circle fx:id="tonearmPivot" centerX="112" centerY="-100" radius="7"
-                                    style="-fx-fill: #888888; -fx-stroke: #AAAAAA; -fx-stroke-width: 2;
-                                           -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.3),4,0,0,1);"/>
-                            <Line fx:id="tonearmLine"
-                                  startX="112" startY="-100"
-                                  endX="42" endY="-18"
-                                  style="-fx-stroke: #AAAAAA; -fx-stroke-width: 3.5;
-                                         -fx-stroke-line-cap: round;"/>
-                            <Rectangle fx:id="tonearmHead" x="36" y="-26" width="10" height="14"
-                                       arcWidth="4" arcHeight="4"
-                                       style="-fx-fill: #777777; -fx-stroke: #999999; -fx-stroke-width:1;"/>
-                        </Group>
+                    <!-- ALBUM ART DISPLAY -->
+                    <StackPane fx:id="albumArtPane"
+                               prefWidth="280" prefHeight="280"
+                               maxWidth="280" maxHeight="280">
+                        <ImageView fx:id="albumArtImage"
+                                   fitWidth="280" fitHeight="280"
+                                   preserveRatio="true"
+                                   smooth="true"
+                                   style="-fx-background-radius: 16; -fx-background-color: #f0f0f0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 8);"/>
+                        <Label fx:id="albumArtPlaceholder" text="♪"
+                               style="-fx-text-fill: rgba(29,185,84,0.3);
+                                      -fx-font-size: 80px;"/>
                     </StackPane>
 
                     <!-- Now playing info - FIX: giới hạn width -->

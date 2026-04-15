@@ -39,9 +39,9 @@ import java.util.concurrent.Executors;
 public class MainController {
 
     // ── Now Playing ──────────────────────────────────────────────────
-    @FXML private StackPane vinylPane;
-    @FXML private Circle vinylDisc;
-    @FXML private Circle albumArtCircle;   // circle hiển thị ảnh bài hát
+    @FXML private StackPane albumArtPane;
+    @FXML private ImageView albumArtImage;
+    @FXML private Label albumArtPlaceholder;
     @FXML private Label albumArtLabel;
     @FXML private Label nowPlayingTitle;
     @FXML private Label nowPlayingArtist;
@@ -99,7 +99,6 @@ public class MainController {
     private final Map<Integer, String> lyricsMap = new HashMap<>();
 
     // ── Playback state ───────────────────────────────────────────────
-    private RotateTransition vinylSpin;
     private Timeline progressTimeline;
     private MediaPlayer mediaPlayer;
     private boolean isPlaying = false;
@@ -282,13 +281,6 @@ public class MainController {
 
         playlistComboBox.setItems(playlistList);
 
-        if (vinylPane != null) {
-            vinylSpin = new RotateTransition(Duration.seconds(4), vinylPane);
-            vinylSpin.setByAngle(360);
-            vinylSpin.setCycleCount(RotateTransition.INDEFINITE);
-            vinylSpin.setInterpolator(javafx.animation.Interpolator.LINEAR);
-        }
-
         progressTimeline = new Timeline(new KeyFrame(Duration.millis(200), e -> tickProgress()));
         progressTimeline.setCycleCount(Timeline.INDEFINITE);
 
@@ -374,8 +366,9 @@ public class MainController {
     }
 
     private void setAlbumArtDefault() {
-        if (albumArtCircle != null) {
-            albumArtCircle.setFill(javafx.scene.paint.Color.web("#1DB954"));
+        if (albumArtImage != null) {
+            albumArtImage.setImage(null);
+            albumArtPlaceholder.setVisible(true);
         }
         if (albumArtLabel != null) albumArtLabel.setText("♪");
     }
@@ -410,8 +403,9 @@ public class MainController {
                         img.progressProperty().addListener((obs, o, n) -> {
                             if (n.doubleValue() >= 1.0 && !img.isError()) {
                                 Platform.runLater(() -> {
-                                    if (albumArtCircle != null) {
-                                        albumArtCircle.setFill(new ImagePattern(img));
+                                    if (albumArtImage != null) {
+                                        albumArtImage.setImage(img);
+                                        albumArtPlaceholder.setVisible(false);
                                         if (albumArtLabel != null) albumArtLabel.setText("");
                                     }
                                 });
@@ -628,7 +622,6 @@ public class MainController {
             mediaPlayer.play();
             isPlaying = true;
             playPauseBtn.setText("⏸");
-            if (vinylSpin != null) vinylSpin.play();
         } catch (Exception e) {
             setStatus("⚠ Không phát được: " + e.getMessage());
             startProgressTimer();
@@ -643,14 +636,12 @@ public class MainController {
     private void startProgressTimer() {
         isPlaying = true;
         playPauseBtn.setText("⏸");
-        if (vinylSpin != null) vinylSpin.play();
         progressTimeline.play();
     }
 
     private void startPlayback() {
         isPlaying = true;
         playPauseBtn.setText("⏸");
-        if (vinylSpin != null) vinylSpin.play();
         if (mediaPlayer != null) mediaPlayer.play();
         else progressTimeline.play();
     }
@@ -658,7 +649,6 @@ public class MainController {
     private void stopPlayback() {
         isPlaying = false;
         playPauseBtn.setText("▶");
-        if (vinylSpin != null) vinylSpin.pause();
         if (mediaPlayer != null) mediaPlayer.pause();
         else progressTimeline.pause();
     }
@@ -1410,7 +1400,6 @@ public class MainController {
             mediaPlayer.play();
             isPlaying = true;
             playPauseBtn.setText("â¶");
-            if (vinylSpin != null) vinylSpin.play();
             System.out.println("YouTube stream play started with headers");
             
         } catch (Exception e) {
@@ -1602,7 +1591,6 @@ public class MainController {
             mediaPlayer.play();
             isPlaying = true;
             playPauseBtn.setText("â¶");
-            if (vinylSpin != null) vinylSpin.play();
             System.out.println("Direct stream play started - NO DOWNLOAD NEEDED!");
             
         } catch (Exception e) {
@@ -2055,7 +2043,6 @@ public class MainController {
             mediaPlayer.play();
             isPlaying = true;
             playPauseBtn.setText("â¶");
-            if (vinylSpin != null) vinylSpin.play();
             System.out.println("YouTube stream play started");
             
         } catch (Exception e) {
