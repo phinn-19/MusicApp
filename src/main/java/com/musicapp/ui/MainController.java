@@ -623,60 +623,66 @@ public class MainController {
 
         setStatus("Đang tải thông tin bài hát...");
 
-        // Create song immediately for instant feedback
-        String tempTitle = isYouTube ? "YouTube: " + url.replaceAll(".*[?&]v=([^&]+).*", "$1") : url.substring(url.lastIndexOf('/') + 1);
-        try { tempTitle = URLDecoder.decode(tempTitle, StandardCharsets.UTF_8); } catch (Exception ignored) {}
+        // Fetch metadata BEFORE saving to database
+        executor.submit(() -> {
+            try {
+                String finalTitle = url;
+                String finalArtist = isYouTube ? "YouTube" : (isSoundCloud ? "SoundCloud" : "Online");
+                int finalDuration = 0;
 
-        Song streamSong = new Song(tempTitle, isYouTube ? "YouTube" : (isSoundCloud ? "SoundCloud" : "Online"), "", 0, url);
-
-        // Add to database immediately
-        if (songDao.addSong(streamSong)) {
-            // Add to list immediately
-            addSongToList(streamSong);
-
-            // Play immediately
-            playSong(streamSong);
-
-            // Clear field immediately
-            streamUrlField.clear();
-            setStatus("Đã thêm: " + tempTitle);
-        }
-
-        // Fetch metadata in background (non-blocking)
-        if (isYouTube) {
-            executor.submit(() -> {
-                try {
+                if (isYouTube) {
                     YouTubeMetadata metadata = fetchYouTubeMetadata(url);
                     if (metadata != null) {
-                        // Update song with real metadata
-                        streamSong.setTitle(metadata.title);
-                        streamSong.setArtist(metadata.artist);
-                        streamSong.setDuration(metadata.duration);
-
-                        // Update UI with real info
-                        Platform.runLater(() -> {
-                            nowPlayingTitle.setText(metadata.title);
-                            nowPlayingArtist.setText(metadata.artist);
-                            if (metadata.duration > 0) {
-                                totalTimeLabel.setText(formatTime(metadata.duration));
-                            }
-                            setStatus("Đã thêm: " + metadata.title + " - " + metadata.artist);
-                        });
+                        finalTitle = metadata.title;
+                        finalArtist = metadata.artist;
+                        finalDuration = metadata.duration;
 
                         // Try to extract lyrics from description
                         String lyrics = extractLyricsFromDescription(metadata.description);
                         if (lyrics != null && !lyrics.trim().isEmpty()) {
-                            lyricsMap.put(streamSong.getId(), lyrics);
-                            Platform.runLater(() -> updateLyricsPanel(streamSong));
+                            lyricsMap.put(-1, lyrics); // Temp storage, will update after song is saved
                         }
+                    } else {
+                        // Fallback if metadata fetch fails
+                        finalTitle = "YouTube: " + url.replaceAll(".*[?&]v=([^&]+).*", "$1");
+                        try { finalTitle = URLDecoder.decode(finalTitle, StandardCharsets.UTF_8); } catch (Exception ignored) {}
                     }
-                } catch (Exception e) {
-                    Platform.runLater(() -> {
-                        setStatus("Lỗi khi tải thông tin YouTube: " + e.getMessage());
-                    });
+                } else {
+                    // For non-YouTube URLs, use filename as title
+                    finalTitle = url.substring(url.lastIndexOf('/') + 1);
+                    try { finalTitle = URLDecoder.decode(finalTitle, StandardCharsets.UTF_8); } catch (Exception ignored) {}
                 }
-            });
-        }
+
+                // Create song with fetched metadata
+                Song streamSong = new Song(finalTitle, finalArtist, "", finalDuration, url);
+
+                // Add to database with correct metadata
+                Platform.runLater(() -> {
+                    if (songDao.addSong(streamSong)) {
+                        // Update lyrics map with correct song ID
+                        if (lyricsMap.containsKey(-1)) {
+                            lyricsMap.put(streamSong.getId(), lyricsMap.remove(-1));
+                        }
+
+                        // Add to list
+                        addSongToList(streamSong);
+
+                        // Play immediately
+                        playSong(streamSong);
+
+                        // Clear field
+                        streamUrlField.clear();
+                        setStatus("Đã thêm: " + finalTitle + " - " + finalArtist);
+                    } else {
+                        showError("Không thêm được bài hát!");
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    setStatus("Lỗi khi tải thông tin: " + e.getMessage());
+                });
+            }
+        });
     }
 
     // ════════════════════════════════════════════════════════════════
