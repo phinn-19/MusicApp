@@ -556,6 +556,47 @@ public class MainController {
         String description;
     }
 
+    private void playStreamDirect(String streamUrl, int durationHint) {
+        System.out.println("=== playStreamDirect called ===");
+        System.out.println("Stream URL: " + streamUrl);
+        System.out.println("Duration hint: " + durationHint);
+
+        try {
+            stopMedia();
+
+            mediaPlayer = new MediaPlayer(new Media(streamUrl));
+            mediaPlayer.setVolume(volumeSlider.getValue() / 100.0);
+
+            mediaPlayer.setOnReady(() -> {
+                System.out.println("Media player ready");
+                startPlayback();
+            });
+
+            mediaPlayer.setOnError(e -> {
+                System.err.println("Media player error: " + e.getMessage());
+                setStatus("⚠ Lỗi phát stream: " + e.getMessage());
+            });
+
+            mediaPlayer.setOnEndOfMedia(() -> {
+                stopPlayback();
+                if (repeatOn) playSong(currentSong);
+                else onNext();
+            });
+
+            mediaPlayer.play();
+            isPlaying = true;
+            playPauseBtn.setText("⏸");
+            System.out.println("Direct stream play started - NO DOWNLOAD NEEDED!");
+
+        } catch (Exception e) {
+            System.err.println("Exception in direct stream: " + e.getMessage());
+            e.printStackTrace();
+            setStatus("Không thể phát trực tiếp, chuyển sang cache...");
+            // Fallback to cache/download method
+            downloadAndPlayQuickAudio(streamUrl, durationHint);
+        }
+    }
+
     private void playMedia(String uri, int durationHint) {
         System.out.println("=== playMedia called ===");
         System.out.println("URI: " + uri);
@@ -1253,11 +1294,11 @@ public class MainController {
                     System.out.println("Using Invidious audio URL: " + audioUrl);
                     final Song current = currentSong;
                     final int duration = current != null ? current.getDuration() : 0;
-                    final String originalUrl = current != null ? current.getFilePath() : youtubeUrl;
+                    final String finalAudioUrl = audioUrl;
 
                     Platform.runLater(() -> {
-                        setStatus("Ðang kiem tra cache...");
-                        downloadAndPlayQuickAudioWithKey(originalUrl, audioUrl, duration);
+                        setStatus("Đang phát trực tiếp từ Invidious...");
+                        playStreamDirect(finalAudioUrl, duration);
                     });
                     return;
                 }
@@ -1329,10 +1370,9 @@ public class MainController {
                         final int finalDuration = finalCurrent != null ? finalCurrent.getDuration() : 0; // Create final copy for inner lambda
 
                         Platform.runLater(() -> {
-                            setStatus("Ðang kiem tra cache...");
-                            // Pass original YouTube URL for cache key instead of stream URL
-                            String originalUrl = finalCurrent != null ? finalCurrent.getFilePath() : finalStreamUrlCopy;
-                            downloadAndPlayQuickAudioWithKey(originalUrl, finalStreamUrlCopy, finalDuration);
+                            setStatus("Đang phát trực tiếp từ YouTube...");
+                            // Play directly from stream URL without downloading
+                            playStreamDirect(finalStreamUrlCopy, finalDuration);
                         });
                     } else {
                         handlePlaybackError("Khong tim thay stream URL hop le trong output.");
