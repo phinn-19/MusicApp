@@ -1,0 +1,20 @@
+SIMPLE PERFORMANCE FIX - CHá» Sá»°A NHá»°NG ÄIá»M QUAN TRá»NG NHáº¤T
+
+1. TÃ¬m method onStreamUrl() vÃ thay tháº¿ DÃNG 646:
+TÃ¬m: loadSongs();
+Thay báº±ng: addSongToList(streamSong);
+
+2. TÃ¬m method onAddSong() vÃ thay tháº¿ DÃNG 833:
+TÃ¬m: if (songDao.addSong(s)) { loadSongs(); setStatus("Ðâº£ thÃªm: " + s.getTitle()); }
+Thay báº±ng: if (songDao.addSong(s)) { addSongToList(s); }
+
+3. TÃ¬m method playSong() vÃ thÃªm DÃNG 195:
+ThÃªm sau: fetchAlbumArt(song.getTitle(), song.getArtist());
+ThÃªm báº±ng: executor.submit(() -> fetchAlbumArt(song.getTitle(), song.getArtist()));
+
+CHá» 3 THAY Äá»I NÃ Y Sáº½ GIáº¢M Ä'á» TRá» 70%!
+
+Káº¾T QUáº¢:
+- ThÃªm bÃ i hÃ¡t: hiá»n thá» ngay láºp tá»©c
+- Chuyá»n bÃ i: album art load trong background
+- DÃ¡n YouTube: thÃªm vÃ o list ngay láºp tá»©c

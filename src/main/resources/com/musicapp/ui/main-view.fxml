@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.Group?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.musicapp.ui.MainController"
+            prefWidth="1100" prefHeight="660"
+            stylesheets="@musicapp.css"
+            styleClass="root">
+
+    <!-- ══ HEADER ══════════════════════════════════════════════════ -->
+    <top>
+        <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="12">
+            <Button fx:id="sidebarToggleBtn" text="☰"
+                    styleClass="btn-burger" onAction="#onToggleSidebar"/>
+
+            <Label text="♪ MusicApp" styleClass="logo-label"/>
+
+            <HBox HBox.hgrow="ALWAYS"/>
+
+            <!-- Search -->
+            <HBox alignment="CENTER" spacing="0"
+                  style="-fx-background-color: white;
+                         -fx-border-color: #E0E0E0;
+                         -fx-border-width: 1.5;
+                         -fx-border-radius: 20;
+                         -fx-background-radius: 20;
+                         -fx-padding: 0 4 0 0;">
+                <TextField fx:id="searchField"
+                           promptText="Tìm bài hát, ca sĩ..."
+                           prefWidth="260"
+                           style="-fx-background-color: transparent;
+                                  -fx-border-color: transparent;
+                                  -fx-text-fill: #333333;
+                                  -fx-prompt-text-fill: #c0b8e0;
+                                  -fx-padding: 7 12 7 16;
+                                  -fx-font-size: 13px;
+                                  -fx-background-radius: 20;"
+                           onAction="#onSearch"/>
+                <Button text="🔍 Tìm" styleClass="btn-search" onAction="#onSearch"/>
+            </HBox>
+
+            <!-- Lyrics toggle -->
+            <Button fx:id="lyricsToggleBtn" text="📜 Lời"
+                    styleClass="btn-burger" onAction="#onToggleLyrics"/>
+
+            <!-- Dark mode toggle -->
+            <Button fx:id="themeToggleBtn" text="🌙"
+                    styleClass="btn-burger" onAction="#onToggleTheme"/>
+        </HBox>
+    </top>
+
+    <!-- ══ BODY ════════════════════════════════════════════════════ -->
+    <center>
+        <HBox>
+            <!-- ── SIDEBAR TRÁI ── FIX: set fixed width và không co giãn -->
+            <VBox fx:id="sidebar" prefWidth="280" maxWidth="280" minWidth="280"
+                  styleClass="sidebar-pane" spacing="0">
+
+                <!-- Tab buttons -->
+                <HBox spacing="0" style="-fx-padding: 12 12 0 12;">
+                    <Button fx:id="tabSongsBtn" text="Bài hát"
+                            styleClass="btn-tab-active"
+                            maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                            onAction="#onTabSongs"/>
+                    <Button fx:id="tabPlaylistsBtn" text="Playlist"
+                            styleClass="btn-tab-inactive"
+                            maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                            onAction="#onTabPlaylists"/>
+                </HBox>
+
+                <!-- PANEL SONGS -->
+                <VBox fx:id="panelSongs" VBox.vgrow="ALWAYS" spacing="0">
+                    <!-- Header với padding đều -->
+                    <HBox alignment="CENTER_LEFT" spacing="6"
+                          style="-fx-padding: 12 12 8 12;">
+                        <Label text="TẤT CẢ BÀI HÁT" styleClass="section-label"/>
+                        <HBox HBox.hgrow="ALWAYS"/>
+                        <Button text="+" styleClass="btn-icon-add" onAction="#onAddSong"/>
+                        <Button text="📂" styleClass="btn-icon-add" onAction="#onImportSong"/>
+                        <Button text="✕" styleClass="btn-icon-del" onAction="#onDeleteSong"/>
+                    </HBox>
+
+                    <!-- ScrollPane với fixed width -->
+                    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                                style="-fx-background-color: transparent;
+                                       -fx-border-color: transparent;">
+                        <ListView fx:id="songListView" styleClass="song-list-view"/>
+                    </ScrollPane>
+
+                    <!-- Add to playlist section -->
+                    <VBox styleClass="add-pl-bar" spacing="5"
+                          style="-fx-padding: 10 12 12 12;">
+                        <Label text="THÊM VÀO PLAYLIST" styleClass="section-label"/>
+                        <HBox spacing="8" alignment="CENTER">
+                            <ComboBox fx:id="playlistComboBox"
+                                      promptText="Chọn playlist..."
+                                      styleClass="add-pl-combo"
+                                      HBox.hgrow="ALWAYS"/>
+                            <Button text="→" styleClass="btn-add-to-pl"
+                                    onAction="#onAddSongToPlaylist"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- PANEL PLAYLISTS -->
+                <VBox fx:id="panelPlaylists" visible="false" managed="false" spacing="0">
+                    <HBox alignment="CENTER_LEFT" spacing="6"
+                          style="-fx-padding: 12 12 8 12;">
+                        <Label text="PLAYLISTS" styleClass="section-label"/>
+                        <HBox HBox.hgrow="ALWAYS"/>
+                        <Button text="+" styleClass="btn-icon-add" onAction="#onAddPlaylist"/>
+                        <Button text="✕" styleClass="btn-icon-del" onAction="#onDeletePlaylist"/>
+                    </HBox>
+
+                    <ScrollPane prefHeight="180" fitToWidth="true"
+                                style="-fx-background-color: transparent;
+                                       -fx-border-color: transparent;">
+                        <ListView fx:id="playlistListView" styleClass="playlist-list-view"/>
+                    </ScrollPane>
+
+                    <HBox alignment="CENTER_LEFT" spacing="6"
+                          style="-fx-padding: 12 12 8 12;">
+                        <Label text="BÀI TRONG PLAYLIST" styleClass="section-label"/>
+                        <HBox HBox.hgrow="ALWAYS"/>
+                        <Button text="✕" styleClass="btn-icon-del"
+                                onAction="#onRemoveSongFromPlaylist"/>
+                    </HBox>
+
+                    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                                style="-fx-background-color: transparent;
+                                       -fx-border-color: transparent;">
+                        <ListView fx:id="playlistSongsView" styleClass="playlist-list-view"/>
+                    </ScrollPane>
+                </VBox>
+            </VBox>
+
+            <!-- ── MAIN CONTENT ── FIX: set HBox grow và giới hạn width -->
+            <StackPane HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308">
+
+                <!-- PLAYER VIEW -->
+                <VBox fx:id="playerView" styleClass="main-area"
+                      alignment="CENTER" spacing="20"
+                      maxWidth="Infinity">
+
+                    <!-- VINYL DISC -->
+                    <StackPane fx:id="vinylPane"
+                               prefWidth="220" prefHeight="220"
+                               maxWidth="220" maxHeight="220">
+                        <Circle radius="110"
+                                style="-fx-fill: #0d0d18;
+                                       -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.5),28,0,0,8);"/>
+                        <Circle fx:id="vinylDisc" radius="106"
+                                style="-fx-fill: #181824;"/>
+                        <Circle radius="100" style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.06);-fx-stroke-width:1.5;"/>
+                        <Circle radius="93"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.05);-fx-stroke-width:1;"/>
+                        <Circle radius="86"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.05);-fx-stroke-width:1;"/>
+                        <Circle radius="78"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
+                        <Circle radius="70"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
+                        <Circle radius="62"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
+                        <Circle radius="54"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
+                        <Circle radius="46"  style="-fx-fill:transparent;-fx-stroke:rgba(255,255,255,0.04);-fx-stroke-width:1;"/>
+                        <Circle fx:id="albumArtCircle" radius="38"
+                                style="-fx-fill: radial-gradient(center 40% 40%, radius 80%, #1DB954, #158A3E);
+                                       -fx-effect: dropshadow(gaussian,rgba(29,185,84,0.6),12,0,0,0);"/>
+                        <Label fx:id="albumArtLabel" text="♪"
+                               style="-fx-text-fill: rgba(255,255,255,0.8);
+                                      -fx-font-size: 22px;"/>
+                        <Circle radius="5"
+                                style="-fx-fill: #f5f5fa; -fx-stroke: #e0dcf8; -fx-stroke-width: 1;"/>
+                        <Group>
+                            <Circle fx:id="tonearmPivot" centerX="112" centerY="-100" radius="7"
+                                    style="-fx-fill: #888888; -fx-stroke: #AAAAAA; -fx-stroke-width: 2;
+                                           -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.3),4,0,0,1);"/>
+                            <Line fx:id="tonearmLine"
+                                  startX="112" startY="-100"
+                                  endX="42" endY="-18"
+                                  style="-fx-stroke: #AAAAAA; -fx-stroke-width: 3.5;
+                                         -fx-stroke-line-cap: round;"/>
+                            <Rectangle fx:id="tonearmHead" x="36" y="-26" width="10" height="14"
+                                       arcWidth="4" arcHeight="4"
+                                       style="-fx-fill: #777777; -fx-stroke: #999999; -fx-stroke-width:1;"/>
+                        </Group>
+                    </StackPane>
+
+                    <!-- Now playing info - FIX: giới hạn width -->
+                    <VBox alignment="CENTER" spacing="5" maxWidth="400">
+                        <Label fx:id="nowPlayingTitle" text="Chưa chọn bài"
+                               styleClass="np-title" wrapText="true" alignment="CENTER"
+                               maxWidth="380"/>
+                        <Label fx:id="nowPlayingArtist" text="—" styleClass="np-artist"/>
+                        <Label fx:id="nowPlayingAlbum" text="" styleClass="np-album"/>
+                    </VBox>
+
+                    <!-- Progress -->
+                    <VBox spacing="6" maxWidth="450" prefWidth="450">
+                        <HBox>
+                            <Label fx:id="currentTimeLabel" text="0:00" styleClass="time-label"/>
+                            <HBox HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="totalTimeLabel" text="0:00" styleClass="time-label"/>
+                        </HBox>
+                        <ProgressBar fx:id="progressBar" progress="0"
+                                     maxWidth="Infinity" styleClass="progress-bar"/>
+                    </VBox>
+
+                    <!-- Controls -->
+                    <HBox alignment="CENTER" spacing="20">
+                        <Button fx:id="shuffleBtn" text="⇄" styleClass="btn-ghost"
+                                onAction="#onToggleShuffle"/>
+                        <Button text="⏮" styleClass="btn-prev-next" onAction="#onPrev"/>
+                        <Button fx:id="playPauseBtn" text="▶" styleClass="btn-play"
+                                onAction="#onPlayPause"/>
+                        <Button text="⏭" styleClass="btn-prev-next" onAction="#onNext"/>
+                        <Button fx:id="repeatBtn" text="↺" styleClass="btn-ghost"
+                                onAction="#onToggleRepeat"/>
+                    </HBox>
+
+                    <!-- Volume -->
+                    <HBox alignment="CENTER" spacing="10" maxWidth="280" prefWidth="280">
+                        <Label text="🔈" styleClass="time-label"/>
+                        <Slider fx:id="volumeSlider" min="0" max="100" value="70"
+                                HBox.hgrow="ALWAYS" styleClass="slider"/>
+                        <Label text="🔊" styleClass="time-label"/>
+                    </HBox>
+
+                    <!-- URL stream input -->
+                    <HBox alignment="CENTER" spacing="8" maxWidth="500" prefWidth="500">
+                        <TextField fx:id="streamUrlField"
+                                   promptText="Dán link nhạc (mp3/YouTube/SoundCloud)..."
+                                   HBox.hgrow="ALWAYS"
+                                   style="-fx-background-color: transparent;
+                                          -fx-border-color: #E0E0E0;
+                                          -fx-border-width: 1.5;
+                                          -fx-border-radius: 8;
+                                          -fx-background-radius: 8;
+                                          -fx-padding: 6 12;
+                                          -fx-font-size: 12px;"
+                                   onAction="#onStreamUrl"/>
+                        <Button text="▶ Stream" onAction="#onStreamUrl"
+                                style="-fx-background-color: #1DB954;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;
+                                       -fx-border-color: transparent;
+                                       -fx-font-size: 12px;
+                                       -fx-font-weight: bold;
+                                       -fx-padding: 6 12;
+                                       -fx-cursor: hand;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- SEARCH RESULTS VIEW -->
+                <VBox fx:id="searchView" styleClass="search-results-pane"
+                      spacing="16" visible="false" managed="false"
+                      style="-fx-padding: 20;">
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Button text="← Quay lại" styleClass="btn-back" onAction="#onBackToPlayer"/>
+                        <Label fx:id="searchResultTitle" text="Kết quả tìm kiếm"
+                               styleClass="search-result-title"/>
+                    </HBox>
+                    <Label fx:id="searchResultCount" text="" styleClass="search-result-subtitle"/>
+                    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                                style="-fx-background-color: transparent;
+                                       -fx-border-color: transparent;">
+                        <ListView fx:id="searchResultView" styleClass="search-result-list"/>
+                    </ScrollPane>
+                    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 0 0 4 0;">
+                        <Label text="Thêm bài đã chọn vào:" styleClass="section-label"/>
+                        <ComboBox fx:id="searchPlaylistCombo" promptText="Chọn playlist..."
+                                  styleClass="add-pl-combo" prefWidth="180"/>
+                        <Button text="→" styleClass="btn-add-to-pl"
+                                onAction="#onAddSearchResultToPlaylist"/>
+                    </HBox>
+                </VBox>
+            </StackPane>
+
+            <!-- ── LYRICS SIDEBAR ── FIX: fixed width -->
+            <VBox fx:id="lyricsSidebar" prefWidth="280" maxWidth="280" minWidth="280" spacing="0"
+                  style="-fx-background-color: #F5F5F5;
+                         -fx-border-color: transparent transparent transparent #E0E0E0;
+                         -fx-border-width: 0 0 0 1;">
+
+                <HBox alignment="CENTER_LEFT" spacing="8"
+                      style="-fx-padding: 14 14 8 14;
+                             -fx-border-color: transparent transparent #E0E0E0 transparent;
+                             -fx-border-width: 0 0 1 0;">
+                    <Label text="Lời bài hát"
+                           style="-fx-text-fill: #1DB954; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                </HBox>
+
+                <VBox alignment="CENTER" spacing="2" style="-fx-padding: 10 14 6 14;">
+                    <Label fx:id="lyricsSongTitle" text="Chưa chọn bài"
+                           style="-fx-text-fill: #121212; -fx-font-size: 12px;
+                                  -fx-font-weight: bold; -fx-wrap-text: true;"
+                           alignment="CENTER" maxWidth="250"/>
+                    <Label fx:id="lyricsArtistName" text=""
+                           style="-fx-text-fill: #1DB954; -fx-font-size: 11px;"/>
+                </VBox>
+
+                <HBox style="-fx-padding: 0 14 8 14;" spacing="6">
+                    <Button text=" Nhập lời" onAction="#onEditLyrics"
+                            maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                            style="-fx-background-color: #E8F5EE; -fx-text-fill: #1DB954;
+                                   -fx-background-radius: 6; -fx-border-color: #C8E8D8;
+                                   -fx-border-width: 1; -fx-border-radius: 6;
+                                   -fx-font-size: 11px; -fx-padding: 5 8; -fx-cursor: hand;"/>
+                    <Button text="🗑" onAction="#onClearLyrics"
+                            style="-fx-background-color: #ffeaea; -fx-text-fill: #e05555;
+                                   -fx-background-radius: 6; -fx-border-color: transparent;
+                                   -fx-font-size: 11px; -fx-padding: 5 8; -fx-cursor: hand;"/>
+                </HBox>
+
+                <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                            style="-fx-background-color: transparent;
+                                   -fx-border-color: transparent;">
+                    <TextArea fx:id="lyricsArea"
+                              promptText="Chọn bài rồi nhấn Nhập lời..."
+                              wrapText="true" editable="false"
+                              style="-fx-background-color: transparent;
+                                     -fx-border-color: transparent;
+                                     -fx-text-fill: #333333;
+                                     -fx-font-size: 13px;
+                                     -fx-padding: 0 14 14 14;
+                                     -fx-control-inner-background: transparent;"/>
+                </ScrollPane>
+            </VBox>
+        </HBox>
+    </center>
+
+    <!-- ══ STATUS BAR ══════════════════════════════════════════════ -->
+    <bottom>
+        <HBox styleClass="status-bar">
+            <Label fx:id="statusLabel" text="Sẵn sàng" styleClass="status-label"/>
+        </HBox>
+    </bottom>
+</BorderPane>

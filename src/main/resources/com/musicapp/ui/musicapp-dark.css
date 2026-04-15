@@ -1,0 +1,207 @@
+/* =============================================
+   MusicApp — Dark Mode
+   Spotify-inspired — Deep Black + Green
+   Accent: #1DB954
+   ============================================= */
+
+.root {
+    -fx-background-color: #121212;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-font-size: 13px;
+}
+
+.header-bar {
+    -fx-background-color: #000000;
+    -fx-border-color: transparent transparent #282828 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 20 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0, 0, 3);
+}
+
+.btn-burger {
+    -fx-background-color: #282828;
+    -fx-border-color: #383838;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8; -fx-background-radius: 8;
+    -fx-text-fill: #B3B3B3;
+    -fx-font-size: 14px;
+    -fx-padding: 5 10 5 10;
+    -fx-cursor: hand;
+}
+.btn-burger:hover { -fx-background-color: #383838; }
+
+.logo-label {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.btn-search {
+    -fx-background-color: #1DB954;
+    -fx-background-radius: 16; -fx-border-radius: 16;
+    -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px;
+    -fx-padding: 6 14 6 14; -fx-cursor: hand;
+}
+.btn-search:hover { -fx-background-color: #1aa34a; }
+
+.sidebar-pane {
+    -fx-background-color: #000000;
+    -fx-border-color: transparent #282828 transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.btn-tab-active {
+    -fx-background-color: #1DB954;
+    -fx-background-radius: 7 0 0 7; -fx-border-radius: 7 0 0 7;
+    -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12px;
+    -fx-padding: 8 0 8 0; -fx-cursor: hand;
+}
+.btn-tab-inactive {
+    -fx-background-color: #282828;
+    -fx-background-radius: 0 7 7 0; -fx-border-radius: 0 7 7 0;
+    -fx-text-fill: #727272; -fx-font-size: 12px;
+    -fx-padding: 8 0 8 0; -fx-cursor: hand;
+}
+.btn-tab-inactive:hover { -fx-background-color: #383838; -fx-text-fill: #1DB954; }
+
+.section-label { -fx-text-fill: #727272; -fx-font-size: 10px; -fx-font-weight: bold; }
+
+.btn-icon-add {
+    -fx-background-color: #1DB954; -fx-background-radius: 50; -fx-border-radius: 50;
+    -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;
+    -fx-min-width: 26; -fx-min-height: 26; -fx-max-width: 26; -fx-max-height: 26;
+    -fx-padding: 0; -fx-cursor: hand;
+}
+.btn-icon-add:hover { -fx-background-color: #1aa34a; }
+
+.btn-icon-del {
+    -fx-background-color: #3A1A1A; -fx-background-radius: 50; -fx-border-radius: 50;
+    -fx-text-fill: #E05555; -fx-font-size: 11px;
+    -fx-min-width: 26; -fx-min-height: 26; -fx-max-width: 26; -fx-max-height: 26;
+    -fx-padding: 0; -fx-cursor: hand;
+}
+.btn-icon-del:hover { -fx-background-color: #4A2020; }
+
+.song-list-view, .playlist-list-view {
+    -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 4 8 4 8;
+}
+.song-list-view .list-cell, .playlist-list-view .list-cell {
+    -fx-background-color: transparent; -fx-border-color: transparent;
+    -fx-padding: 7 10 7 10; -fx-background-radius: 8; -fx-text-fill: #B3B3B3;
+}
+.song-list-view .list-cell:hover, .playlist-list-view .list-cell:hover {
+    -fx-background-color: #282828; -fx-text-fill: #FFFFFF;
+}
+.song-list-view .list-cell:selected, .playlist-list-view .list-cell:selected {
+    -fx-background-color: #1A3D28; -fx-text-fill: #1DB954; -fx-font-weight: bold;
+}
+.song-list-view:focused, .playlist-list-view:focused { -fx-border-color: transparent; }
+.song-list-view .list-cell:focused, .playlist-list-view .list-cell:focused { -fx-border-color: transparent; }
+
+.add-pl-bar {
+    -fx-background-color: #0A0A0A;
+    -fx-border-color: #282828 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0; -fx-padding: 10 12 10 12;
+}
+.add-pl-combo {
+    -fx-background-color: #282828; -fx-border-color: #383838;
+    -fx-border-width: 1.5; -fx-border-radius: 6; -fx-background-radius: 6;
+    -fx-text-fill: #FFFFFF; -fx-padding: 4 8 4 8;
+}
+.btn-add-to-pl {
+    -fx-background-color: #1DB954; -fx-background-radius: 6; -fx-border-radius: 6;
+    -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;
+    -fx-padding: 5 14 5 14; -fx-cursor: hand;
+}
+.btn-add-to-pl:hover { -fx-background-color: #1aa34a; }
+
+.main-area { -fx-background-color: #121212; -fx-padding: 20; }
+
+.np-title { -fx-text-fill: #FFFFFF; -fx-font-size: 22px; -fx-font-weight: bold; }
+.np-artist { -fx-text-fill: #1DB954; -fx-font-size: 14px; -fx-font-weight: bold; }
+.np-album { -fx-text-fill: #727272; -fx-font-size: 11px; }
+
+.progress-bar { -fx-pref-height: 5; -fx-background-radius: 5; -fx-accent: #1DB954; }
+.progress-bar .bar {
+    -fx-background-color: #1DB954; -fx-background-radius: 5;
+    -fx-border-radius: 5; -fx-background-insets: 0;
+}
+.progress-bar .track {
+    -fx-background-color: #535353; -fx-background-radius: 5; -fx-background-insets: 0;
+}
+
+.time-label { -fx-text-fill: #727272; -fx-font-size: 11px; }
+
+.btn-play {
+    -fx-background-color: #1DB954; -fx-background-radius: 50; -fx-border-radius: 50;
+    -fx-text-fill: white; -fx-font-size: 20px;
+    -fx-min-width: 56; -fx-min-height: 56; -fx-max-width: 56; -fx-max-height: 56;
+    -fx-padding: 0; -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(29,185,84,0.5), 16, 0, 0, 4);
+}
+.btn-play:hover {
+    -fx-background-color: #1fce5e;
+    -fx-effect: dropshadow(gaussian, rgba(29,185,84,0.7), 20, 0, 0, 5);
+}
+
+.btn-prev-next {
+    -fx-background-color: #282828; -fx-background-radius: 50; -fx-border-radius: 50;
+    -fx-text-fill: #B3B3B3; -fx-font-size: 16px;
+    -fx-min-width: 42; -fx-min-height: 42; -fx-max-width: 42; -fx-max-height: 42;
+    -fx-padding: 0; -fx-cursor: hand;
+}
+.btn-prev-next:hover { -fx-background-color: #383838; -fx-text-fill: #1DB954; }
+
+.btn-ghost {
+    -fx-background-color: transparent; -fx-border-color: transparent;
+    -fx-text-fill: #535353; -fx-font-size: 17px;
+    -fx-padding: 5 6 5 6; -fx-background-radius: 6; -fx-cursor: hand;
+}
+.btn-ghost:hover { -fx-text-fill: #1DB954; -fx-background-color: #282828; }
+.btn-ghost-on {
+    -fx-background-color: #1A3D28; -fx-border-color: transparent;
+    -fx-text-fill: #1DB954; -fx-font-size: 17px;
+    -fx-padding: 5 6 5 6; -fx-background-radius: 6; -fx-cursor: hand;
+}
+
+.slider .thumb {
+    -fx-background-color: #FFFFFF; -fx-background-radius: 50;
+    -fx-pref-width: 14; -fx-pref-height: 14;
+}
+.slider .track { -fx-background-color: #535353; -fx-background-radius: 4; -fx-pref-height: 4; }
+
+.status-bar {
+    -fx-background-color: #000000;
+    -fx-border-color: #282828 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0; -fx-padding: 5 20 5 20;
+}
+.status-label { -fx-text-fill: #727272; -fx-font-size: 11px; }
+
+.search-results-pane { -fx-background-color: #121212; -fx-padding: 20 24 20 24; }
+.search-result-title { -fx-text-fill: #FFFFFF; -fx-font-size: 18px; -fx-font-weight: bold; }
+.search-result-subtitle { -fx-text-fill: #727272; -fx-font-size: 11px; -fx-font-weight: bold; }
+.search-result-list {
+    -fx-background-color: #181818; -fx-border-color: #282828;
+    -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 4;
+}
+.search-result-list .list-cell {
+    -fx-background-color: transparent; -fx-border-color: transparent;
+    -fx-padding: 8 12 8 12; -fx-background-radius: 8; -fx-text-fill: #B3B3B3;
+}
+.search-result-list .list-cell:hover { -fx-background-color: #282828; -fx-text-fill: #FFFFFF; }
+.search-result-list .list-cell:selected { -fx-background-color: #1A3D28; -fx-text-fill: #1DB954; }
+.search-result-list:focused { -fx-border-color: #282828; }
+
+.btn-back {
+    -fx-background-color: #282828; -fx-background-radius: 20; -fx-border-radius: 20;
+    -fx-text-fill: #B3B3B3; -fx-font-size: 12px; -fx-font-weight: bold;
+    -fx-padding: 6 14 6 14; -fx-cursor: hand;
+}
+.btn-back:hover { -fx-background-color: #383838; }
+
+.scroll-bar:vertical { -fx-pref-width: 10; -fx-background-color: #282828; }
+.scroll-bar:vertical .thumb { -fx-background-color: #727272; -fx-background-radius: 5; }
+.scroll-bar:vertical .track { -fx-background-color: #383838; }
+.scroll-bar:vertical .increment-button, .scroll-bar:vertical .decrement-button {
+    -fx-pref-height: 0; -fx-opacity: 0;
+}

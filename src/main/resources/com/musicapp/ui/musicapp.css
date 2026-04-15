@@ -1,0 +1,317 @@
+/* =============================================
+   MusicApp — Light Mode
+   Spotify × NhacCuaTui — Green/Black Palette
+   Accent: #1DB954 (Spotify Green)
+   ============================================= */
+
+.root {
+    -fx-background-color: #FAFAFA;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-font-size: 13px;
+}
+
+.header-bar {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #E8E8E8 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 20 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
+}
+
+.btn-burger {
+    -fx-background-color: #F0F0F0;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-padding: 5 10 5 10;
+    -fx-cursor: hand;
+}
+.btn-burger:hover { -fx-background-color: #E8E8E8; }
+
+.logo-label {
+    -fx-text-fill: #121212;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.btn-search {
+    -fx-background-color: #1DB954;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 6 14 6 14;
+    -fx-cursor: hand;
+}
+.btn-search:hover { -fx-background-color: #1aa34a; }
+
+.sidebar-pane {
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: transparent #E0E0E0 transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.btn-tab-active {
+    -fx-background-color: #1DB954;
+    -fx-background-radius: 7 0 0 7;
+    -fx-border-radius: 7 0 0 7;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 8 0 8 0;
+    -fx-cursor: hand;
+}
+.btn-tab-inactive {
+    -fx-background-color: #ECECEC;
+    -fx-background-radius: 0 7 7 0;
+    -fx-border-radius: 0 7 7 0;
+    -fx-text-fill: #888888;
+    -fx-font-size: 12px;
+    -fx-padding: 8 0 8 0;
+    -fx-cursor: hand;
+}
+.btn-tab-inactive:hover { -fx-background-color: #E0E0E0; -fx-text-fill: #1DB954; }
+
+.section-label {
+    -fx-text-fill: #AAAAAA;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.btn-icon-add {
+    -fx-background-color: #1DB954;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-min-width: 26; -fx-min-height: 26;
+    -fx-max-width: 26; -fx-max-height: 26;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+.btn-icon-add:hover { -fx-background-color: #1aa34a; }
+
+.btn-icon-del {
+    -fx-background-color: #FFEEEE;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: #E05555;
+    -fx-font-size: 11px;
+    -fx-min-width: 26; -fx-min-height: 26;
+    -fx-max-width: 26; -fx-max-height: 26;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+.btn-icon-del:hover { -fx-background-color: #FFD4D4; }
+
+.song-list-view, .playlist-list-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 4 8 4 8;
+}
+.song-list-view .list-cell, .playlist-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 7 10 7 10;
+    -fx-background-radius: 8;
+    -fx-text-fill: #333333;
+}
+.song-list-view .list-cell:hover, .playlist-list-view .list-cell:hover {
+    -fx-background-color: #EBEBEB;
+}
+.song-list-view .list-cell:selected, .playlist-list-view .list-cell:selected {
+    -fx-background-color: #D8F5E2;
+    -fx-text-fill: #1aa34a;
+    -fx-font-weight: bold;
+}
+.song-list-view:focused, .playlist-list-view:focused { -fx-border-color: transparent; }
+.song-list-view .list-cell:focused, .playlist-list-view .list-cell:focused { -fx-border-color: transparent; }
+
+.add-pl-bar {
+    -fx-background-color: #EFEFEF;
+    -fx-border-color: #E0E0E0 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 10 12 10 12;
+}
+.add-pl-combo {
+    -fx-background-color: white;
+    -fx-border-color: #D8D8D8;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #333333;
+    -fx-padding: 4 8 4 8;
+}
+.btn-add-to-pl {
+    -fx-background-color: #1DB954;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 5 14 5 14;
+    -fx-cursor: hand;
+}
+.btn-add-to-pl:hover { -fx-background-color: #1aa34a; }
+
+.main-area {
+    -fx-background-color: #FAFAFA;
+    -fx-padding: 20;
+}
+
+.np-title {
+    -fx-text-fill: #121212;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+.np-artist {
+    -fx-text-fill: #1DB954;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.np-album {
+    -fx-text-fill: #888888;
+    -fx-font-size: 11px;
+}
+
+.progress-bar { -fx-pref-height: 5; -fx-background-radius: 5; -fx-accent: #1DB954; }
+.progress-bar .bar {
+    -fx-background-color: #1DB954;
+    -fx-background-radius: 5; -fx-border-radius: 5; -fx-background-insets: 0;
+}
+.progress-bar .track {
+    -fx-background-color: #DDDDDD;
+    -fx-background-radius: 5; -fx-background-insets: 0;
+}
+
+.time-label { -fx-text-fill: #888888; -fx-font-size: 11px; }
+
+.btn-play {
+    -fx-background-color: #1DB954;
+    -fx-background-radius: 50; -fx-border-radius: 50;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-min-width: 56; -fx-min-height: 56;
+    -fx-max-width: 56; -fx-max-height: 56;
+    -fx-padding: 0; -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(29,185,84,0.4), 16, 0, 0, 4);
+}
+.btn-play:hover {
+    -fx-background-color: #1aa34a;
+    -fx-effect: dropshadow(gaussian, rgba(29,185,84,0.6), 20, 0, 0, 5);
+}
+
+.btn-prev-next {
+    -fx-background-color: #EBEBEB;
+    -fx-background-radius: 50; -fx-border-radius: 50;
+    -fx-text-fill: #444444;
+    -fx-font-size: 16px;
+    -fx-min-width: 42; -fx-min-height: 42;
+    -fx-max-width: 42; -fx-max-height: 42;
+    -fx-padding: 0; -fx-cursor: hand;
+}
+.btn-prev-next:hover { -fx-background-color: #D5D5D5; -fx-text-fill: #1DB954; }
+
+.btn-ghost {
+    -fx-background-color: transparent; -fx-border-color: transparent;
+    -fx-text-fill: #BBBBBB; -fx-font-size: 17px;
+    -fx-padding: 5 6 5 6; -fx-background-radius: 6; -fx-cursor: hand;
+}
+.btn-ghost:hover { -fx-text-fill: #1DB954; -fx-background-color: #EBEBEB; }
+.btn-ghost-on {
+    -fx-background-color: #D8F5E2; -fx-border-color: transparent;
+    -fx-text-fill: #1DB954; -fx-font-size: 17px;
+    -fx-padding: 5 6 5 6; -fx-background-radius: 6; -fx-cursor: hand;
+}
+
+.slider .thumb {
+    -fx-background-color: #1DB954; -fx-background-radius: 50;
+    -fx-pref-width: 14; -fx-pref-height: 14;
+    -fx-effect: dropshadow(gaussian, rgba(29,185,84,0.4), 6, 0, 0, 1);
+}
+.slider .track { -fx-background-color: #DDDDDD; -fx-background-radius: 4; -fx-pref-height: 4; }
+
+.status-bar {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E8E8E8 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 5 20 5 20;
+}
+.status-label { -fx-text-fill: #AAAAAA; -fx-font-size: 11px; }
+
+.search-results-pane { -fx-background-color: #FAFAFA; -fx-padding: 20 24 20 24; }
+.search-result-title { -fx-text-fill: #121212; -fx-font-size: 18px; -fx-font-weight: bold; }
+.search-result-subtitle { -fx-text-fill: #AAAAAA; -fx-font-size: 11px; -fx-font-weight: bold; }
+.search-result-list {
+    -fx-background-color: white; -fx-border-color: #E0E0E0;
+    -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 4;
+}
+.search-result-list .list-cell {
+    -fx-background-color: transparent; -fx-border-color: transparent;
+    -fx-padding: 8 12 8 12; -fx-background-radius: 8; -fx-text-fill: #333333;
+}
+.search-result-list .list-cell:hover { -fx-background-color: #F0F0F0; }
+.search-result-list .list-cell:selected { -fx-background-color: #D8F5E2; -fx-text-fill: #1aa34a; }
+.search-result-list:focused { -fx-border-color: #E0E0E0; }
+
+.btn-back {
+    -fx-background-color: #EBEBEB; -fx-background-radius: 20; -fx-border-radius: 20;
+    -fx-text-fill: #444444; -fx-font-size: 12px; -fx-font-weight: bold;
+    -fx-padding: 6 14 6 14; -fx-cursor: hand;
+}
+.btn-back:hover { -fx-background-color: #D5D5D5; }
+
+.scroll-bar:vertical { -fx-pref-width: 10; -fx-background-color: #F0F0F0; }
+.scroll-bar:vertical .thumb { -fx-background-color: #999999; -fx-background-radius: 5; }
+.scroll-bar:vertical .track { -fx-background-color: #E0E0E0; }
+.scroll-bar:vertical .increment-button, .scroll-bar:vertical .decrement-button {
+    -fx-pref-height: 0; -fx-opacity: 0;
+}
+
+/* Force ListView to show scrollbars */
+.song-list-view, .playlist-list-view {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.song-list-view .scroll-bar, .playlist-list-view .scroll-bar {
+    -fx-visible: true;
+}
+/* Thêm vào file CSS của bạn để giới hạn text */
+.np-title {
+    -fx-text-fill: #1DB954;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.np-artist {
+    -fx-text-fill: #666666;
+    -fx-font-size: 14px;
+}
+
+.np-album {
+    -fx-text-fill: #999999;
+    -fx-font-size: 12px;
+}
+
+.song-list-view .list-cell {
+    -fx-padding: 8 12;
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-font-size: 13px;
+    /* Giới hạn text trong list cell */
+    -fx-max-width: 280px;
+}
+
+.playlist-list-view .list-cell {
+    -fx-padding: 8 12;
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-font-size: 13px;
+}

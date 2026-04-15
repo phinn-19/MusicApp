@@ -1,0 +1,141 @@
+PERFORMANCE FIX - CÁC THAY Ðá»I Cáº§N THIáº¾T
+
+1. THAY THáº¾ onStreamUrl() METHOD:
+- Tìm method onStreamUrl() trong MainController.java
+- Thay tháº¿ báº±ng code sau:
+
+@FXML
+private void onStreamUrl() {
+    if (streamUrlField == null) return;
+    String url = streamUrlField.getText().trim();
+    if (url.isEmpty()) { showError("Vui lÃ²ng dÃ¡n link nháº¡c vÃ o!"); return; }
+
+    boolean isYouTube = url.contains("youtube.com") || url.contains("youtu.be");
+    boolean isSoundCloud = url.contains("soundcloud.com");
+
+    setStatus("Ðang táº£i thÃ´ng tin bÃ i hÃ¡t...");
+    
+    // Create song immediately for instant feedback
+    String tempTitle = isYouTube ? "YouTube: " + url.replaceAll(".*[?&]v=([^&]+).*", "$1") : url.substring(url.lastIndexOf('/') + 1);
+    try { tempTitle = URLDecoder.decode(tempTitle, StandardCharsets.UTF_8); } catch (Exception ignored) {}
+    
+    Song streamSong = new Song(tempTitle, isYouTube ? "YouTube" : (isSoundCloud ? "SoundCloud" : "Online"), "", 0, url);
+    
+    // Add to database immediately
+    if (songDao.addSong(streamSong)) {
+        // Add to list immediately
+        addSongToList(streamSong);
+        
+        // Play immediately
+        playSong(streamSong);
+        
+        // Clear field immediately
+        streamUrlField.clear();
+        setStatus("ÐÃ£ thÃªm: " + tempTitle);
+    }
+    
+    // Fetch metadata in background (non-blocking)
+    if (isYouTube) {
+        executor.submit(() -> {
+            try {
+                YouTubeMetadata metadata = fetchYouTubeMetadata(url);
+                if (metadata != null) {
+                    // Update song with real metadata
+                    streamSong.setTitle(metadata.title);
+                    streamSong.setArtist(metadata.artist);
+                    streamSong.setDuration(metadata.duration);
+                    
+                    // Update UI with real info
+                    Platform.runLater(() -> {
+                        nowPlayingTitle.setText(metadata.title);
+                        nowPlayingArtist.setText(metadata.artist);
+                        if (metadata.duration > 0) {
+                            totalTimeLabel.setText(formatTime(metadata.duration));
+                        }
+                        setStatus("ÐÃ£ thÃªm: " + metadata.title + " - " + metadata.artist);
+                    });
+                    
+                    // Try to extract lyrics from description
+                    String lyrics = extractLyricsFromDescription(metadata.description);
+                    if (lyrics != null && !lyrics.trim().isEmpty()) {
+                        lyricsMap.put(streamSong.getId(), lyrics);
+                        Platform.runLater(() -> updateLyricsPanel(streamSong));
+                    }
+                }
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    setStatus("Lá»'i khi táº£i thÃ´ng tin YouTube: " + e.getMessage());
+                });
+            }
+        });
+    }
+}
+
+2. THAY THáº¾ playSong() METHOD:
+- Tìm method playSong() trong MainController.java
+- Thay tháº¿ báº±ng code sau:
+
+private void playSong(Song song) {
+    // Update UI immediately for instant feedback
+    currentSong = song;
+    progressSeconds = 0;
+    progressBar.setProgress(0);
+    currentTimeLabel.setText("0:00");
+    totalTimeLabel.setText(song.getDurationFormatted());
+    nowPlayingTitle.setText(song.getTitle());
+    nowPlayingArtist.setText(song.getArtist());
+    nowPlayingAlbum.setText(song.getAlbum() != null ? song.getAlbum() : "");
+    setStatus("Ðang phÃ¡t: " + song.getTitle() + " â " + song.getArtist());
+
+    // Reset album art to default green immediately
+    setAlbumArtDefault();
+    
+    // Update lyrics panel immediately
+    updateLyricsPanel(song);
+
+    // Fetch album art in background (non-blocking)
+    executor.submit(() -> fetchAlbumArt(song.getTitle(), song.getArtist()));
+
+    String path = song.getFilePath();
+    if (path != null && !path.isBlank()) {
+        if (path.startsWith("http")) {
+            playYouTubeWithFallback(path);
+        } else {
+            playMedia(path.startsWith("http") ? path : new File(path).toURI().toString(), song.getDuration());
+        }
+    } else {
+        stopMedia();
+        startProgressTimer();
+    }
+}
+
+3. THAY THáº¾ onAddSong() METHOD:
+- Tìm method onAddSong() trong MainController.java
+- Thay tháº¿ báº±ng code sau:
+
+@FXML private void onAddSong() {
+    String title  = prompt("ThÃªm bÃ i hÃ¡t", "TÃªn bÃ i hÃ¡t:", "TÃªn:", "");          if (title == null) return;
+    String artist = prompt("ThÃªm bÃ i hÃ¡t", "Ca sÄ©:",        "Ca sÄ©:", "");       if (artist == null) return;
+    String album  = prompt("ThÃªm bÃ i hÃ¡t", "Album:",         "Album:", "");
+    String durStr = prompt("ThÃªm bÃ i hÃ¡t", "Thá»i lÆ°á»£ng (giÃ¢y):", "GiÃ¢y:", "0");
+    int dur = 0; try { dur = Integer.parseInt(durStr == null ? "0" : durStr.trim()); } catch (Exception ignored) {}
+    Song s = new Song(title.trim(), artist.trim(), album == null ? "" : album.trim(), dur, "");
+    
+    // Add to database in background
+    executor.submit(() -> {
+        if (songDao.addSong(s)) {
+            // Add to list immediately
+            Platform.runLater(() -> addSongToList(s));
+        } else {
+            Platform.runLater(() -> showError("KhÃ´ng thÃªm Ä'Æ°á»£c bÃ i hÃ¡t!"));
+        }
+    });
+}
+
+4. XÃ³A file MainController_Optimized.java (khÃ´ng cáº§n thiáº¿t)
+
+Káº¿T QUáº¢:
+- ThÃªm bÃ i hÃ¡t: hiá»n thá» ngay láºp tá»©c
+- Chuyá»n bÃ i: UI cáºp nháºt tá»©c thÃ¬
+- DÃ¡n YouTube link: play ngay, metadata load sau
+- KhÃ´ng cÃ²n Ä'á» trá» - táº¥t cáº£ operations trÃªn background
