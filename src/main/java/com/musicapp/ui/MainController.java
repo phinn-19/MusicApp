@@ -73,7 +73,7 @@ public class MainController {
 
     // ── Search ───────────────────────────────────────────────────────
     @FXML private TextField searchField;
-    @FXML private ListView<Song> searchResultView;
+    @FXML private TilePane searchResultTile;
     @FXML private Label searchResultTitle;
     @FXML private Label searchResultCount;
     @FXML private ComboBox<Playlist> searchPlaylistCombo;
@@ -281,83 +281,6 @@ public class MainController {
         });
 
         playlistComboBox.setItems(playlistList);
-        searchResultView.setItems(searchResultList);
-        searchResultView.setCellFactory(lv -> new javafx.scene.control.ListCell<Song>() {
-            private final ImageView imageView = new ImageView();
-            private final HBox hbox = new HBox(12);
-            private final VBox vbox = new VBox(4);
-            private final Label titleLabel = new Label();
-            private final Label artistLabel = new Label();
-
-            {
-                imageView.setFitWidth(60);
-                imageView.setFitHeight(60);
-                imageView.setPreserveRatio(true);
-                imageView.setSmooth(true);
-                imageView.setStyle("-fx-background-radius: 8; -fx-background-color: #f0f0f0;");
-
-                titleLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
-                artistLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
-
-                vbox.getChildren().addAll(titleLabel, artistLabel);
-                hbox.getChildren().addAll(imageView, vbox);
-                hbox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-                hbox.setStyle("-fx-padding: 8 12 8 12;");
-            }
-
-            @Override
-            protected void updateItem(Song song, boolean empty) {
-                super.updateItem(song, empty);
-                if (empty || song == null) {
-                    setGraphic(null);
-                    imageView.setImage(null);
-                } else {
-                    titleLabel.setText(song.getTitle());
-                    artistLabel.setText(song.getArtist());
-
-                    // Reset image to default before fetching
-                    imageView.setImage(null);
-
-                    // Fetch album art in background
-                    executor.submit(() -> {
-                        try {
-                            String query = java.net.URLEncoder.encode(song.getTitle() + " " + song.getArtist(), StandardCharsets.UTF_8);
-                            String apiUrl = "https://itunes.apple.com/search?term=" + query + "&media=music&limit=1";
-                            java.net.URL url = new java.net.URL(apiUrl);
-                            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
-                            conn.setConnectTimeout(3000);
-                            conn.setReadTimeout(3000);
-                            conn.setRequestProperty("User-Agent", "MusicApp/1.0");
-
-                            if (conn.getResponseCode() == 200) {
-                                String body = new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-                                int idx = body.indexOf("\"artworkUrl100\":");
-                                if (idx >= 0) {
-                                    int start = body.indexOf("\"", idx + 16) + 1;
-                                    int end = body.indexOf("\"", start);
-                                    String artUrl = body.substring(start, end);
-                                    artUrl = artUrl.replace("100x100bb", "60x60bb");
-                                    final String finalUrl = artUrl;
-                                    Image img = new Image(finalUrl, true);
-                                    img.progressProperty().addListener((obs, o, n) -> {
-                                        if (n.doubleValue() >= 1.0 && !img.isError()) {
-                                            Platform.runLater(() -> {
-                                                if (!isEmpty() && getItem() == song) imageView.setImage(img);
-                                            });
-                                        }
-                                    });
-                                }
-                            }
-                            conn.disconnect();
-                        } catch (Exception ignored) {
-                            // Keep default image on error
-                        }
-                    });
-
-                    setGraphic(hbox);
-                }
-            }
-        });
 
         if (vinylPane != null) {
             vinylSpin = new RotateTransition(Duration.seconds(4), vinylPane);
@@ -991,8 +914,78 @@ public class MainController {
         searchResultTitle.setText("Kết quả: \"" + keyword + "\"");
         searchResultCount.setText("Tìm thấy " + results.size() + " bài hát");
         searchPlaylistCombo.setItems(playlistList);
+        populateSearchTile(results);
         setVisible(playerView, false); setVisible(searchView, true);
         setStatus("Tìm thấy " + results.size() + " bài cho \"" + keyword + "\"");
+    }
+
+    private void populateSearchTile(List<Song> results) {
+        searchResultTile.getChildren().clear();
+        for (Song song : results) {
+            VBox card = new VBox(8);
+            card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);");
+
+            ImageView imageView = new ImageView();
+            imageView.setFitWidth(120);
+            imageView.setFitHeight(120);
+            imageView.setPreserveRatio(true);
+            imageView.setSmooth(true);
+            imageView.setStyle("-fx-background-radius: 8; -fx-background-color: #f0f0f0;");
+
+            Label titleLabel = new Label(song.getTitle());
+            titleLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333; -fx-wrap-text: true;");
+            titleLabel.setMaxWidth(120);
+
+            Label artistLabel = new Label(song.getArtist());
+            artistLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #666; -fx-wrap-text: true;");
+            artistLabel.setMaxWidth(120);
+
+            card.getChildren().addAll(imageView, titleLabel, artistLabel);
+            card.setAlignment(javafx.geometry.Pos.CENTER);
+
+            // Fetch album art in background
+            executor.submit(() -> {
+                try {
+                    String query = java.net.URLEncoder.encode(song.getTitle() + " " + song.getArtist(), StandardCharsets.UTF_8);
+                    String apiUrl = "https://itunes.apple.com/search?term=" + query + "&media=music&limit=1";
+                    java.net.URL url = new java.net.URL(apiUrl);
+                    java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(3000);
+                    conn.setReadTimeout(3000);
+                    conn.setRequestProperty("User-Agent", "MusicApp/1.0");
+
+                    if (conn.getResponseCode() == 200) {
+                        String body = new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+                        int idx = body.indexOf("\"artworkUrl100\":");
+                        if (idx >= 0) {
+                            int start = body.indexOf("\"", idx + 16) + 1;
+                            int end = body.indexOf("\"", start);
+                            String artUrl = body.substring(start, end);
+                            artUrl = artUrl.replace("100x100bb", "120x120bb");
+                            final String finalUrl = artUrl;
+                            Image img = new Image(finalUrl, true);
+                            img.progressProperty().addListener((obs, o, n) -> {
+                                if (n.doubleValue() >= 1.0 && !img.isError()) {
+                                    Platform.runLater(() -> imageView.setImage(img));
+                                }
+                            });
+                        }
+                    }
+                    conn.disconnect();
+                } catch (Exception ignored) {
+                    // Keep default image on error
+                }
+            });
+
+            // Click handler
+            card.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2) {
+                    playSong(song);
+                }
+            });
+
+            searchResultTile.getChildren().add(card);
+        }
     }
 
     @FXML private void onBackToPlayer() {
@@ -1001,13 +994,8 @@ public class MainController {
     }
 
     @FXML private void onAddSearchResultToPlaylist() {
-        Song s = searchResultView.getSelectionModel().getSelectedItem();
-        Playlist pl = searchPlaylistCombo.getSelectionModel().getSelectedItem();
-        if (s == null) { showError("Vui lòng chọn bài hát!"); return; }
-        if (pl == null) { showError("Vui lòng chọn playlist!"); return; }
-        if (playlistDao.addSongToPlaylist(pl.getId(), s.getId()))
-            setStatus("Đã thêm \"" + s.getTitle() + "\" vào \"" + pl.getName() + "\"");
-        else showError("Không thêm được!");
+        // Not needed anymore - double click to play
+        showError("Click đúp vào bài hát để phát!");
     }
 
     // ════════════════════════════════════════════════════════════════

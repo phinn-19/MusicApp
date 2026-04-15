@@ -211,6 +211,23 @@
 .search-result-list .list-cell:selected { -fx-background-color: #1A3D28; -fx-text-fill: #1DB954; }
 .search-result-list:focused { -fx-border-color: #282828; }
 
+/* Search result TilePane grid layout (dark mode) */
+.search-result-tile {
+    -fx-background-color: transparent;
+    -fx-padding: 8;
+}
+.search-result-tile .v-box {
+    -fx-background-color: #181818;
+    -fx-background-radius: 12;
+    -fx-padding: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
+    -fx-cursor: hand;
+}
+.search-result-tile .v-box:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 12, 0, 0, 3);
+    -fx-background-color: #282828;
+}
+
 .btn-back {
     -fx-background-color: #282828; -fx-background-radius: 20; -fx-border-radius: 20;
     -fx-text-fill: #B3B3B3; -fx-font-size: 12px; -fx-font-weight: bold;

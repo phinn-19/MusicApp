@@ -266,7 +266,9 @@
                     <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
                                 style="-fx-background-color: transparent;
                                        -fx-border-color: transparent;">
-                        <ListView fx:id="searchResultView" styleClass="search-result-list"/>
+                        <TilePane fx:id="searchResultTile" prefColumns="4"
+                                  hgap="16" vgap="16"
+                                  styleClass="search-result-tile"/>
                     </ScrollPane>
                     <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 0 0 4 0;">
                         <Label text="Thêm bài đã chọn vào:" styleClass="section-label"/>
